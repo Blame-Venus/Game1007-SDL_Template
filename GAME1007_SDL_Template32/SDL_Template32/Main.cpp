@@ -1,9 +1,7 @@
-// Displays a ship on screen
+// Create and run the Game class
 // Joss Moo-Young
 #include <iostream>
 #include"Game.h"
-
-
 
 Game myGame;
 
@@ -11,11 +9,7 @@ Game myGame;
 int main(int argc, char* args[]) // Main MUST have these parameters for SDL.
 {
 	myGame = Game("Hello Game Class", 800, 600);
-
 	myGame.run();
-
 	getchar();
-
-
 	return 0;
 }

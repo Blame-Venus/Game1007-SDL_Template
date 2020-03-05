@@ -2,11 +2,15 @@
 #include <SDL.h>
 #include "Sprite.h"
 
+
+// Game class with a game loop (input, update, draw)
+
+
 class Game
 {
 	// For framerate
-	int FRAMERATE = 30;
-	int FRAME_DELAY_MS = 1000/FRAMERATE;
+	int targetFramerate = 30;
+	int frameDelayMs = 1000/targetFramerate;
 	Uint32 frameEndTimeMs;
 	Uint32 lastFrameStartTimeMs;
 	Uint32 timeSinceLastFrame;
@@ -30,12 +34,25 @@ public:
 	Game(const char* windowName, int windowSizeX, int windowSizeY);
 	~Game();
 
+	// start the game loop
 	void run();
+
+	// game loop
 	void input();
+
+	// update your game world in here!
 	void update();
+
+	// draw your sprites here!
 	void draw();
+	
+	// called at the end of the loop
 	void waitForNextFrame();
+
+	// stop running the gane
 	void quit();
+
+	// clean memory related to the Game object.
 	void cleanup();
 };
 

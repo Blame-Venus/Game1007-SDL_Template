@@ -39,13 +39,12 @@ void Game::run()
 	background.setPosition(0,0);
 	ship.setPosition(0, 0);
 
-	ship.velX = 100;
-	ship.velY = 100;
+
 
 	isRunning = true;
 	
 	// set initial delta time
-	deltaTime = 1.0f / FRAMERATE;
+	deltaTime = 1.0f / targetFramerate;
 	lastFrameStartTimeMs = SDL_GetTicks();
 
 	while (isRunning)
@@ -100,16 +99,16 @@ void Game::waitForNextFrame()
 	Uint32 gameTimeMs = SDL_GetTicks();
 	timeSinceLastFrame = gameTimeMs - lastFrameStartTimeMs;
 
-	if (timeSinceLastFrame < FRAME_DELAY_MS)
+	if (timeSinceLastFrame < frameDelayMs)
 	{
-		SDL_Delay(FRAME_DELAY_MS - timeSinceLastFrame);
+		SDL_Delay(frameDelayMs - timeSinceLastFrame);
 	}
 
 	frameEndTimeMs = SDL_GetTicks();
 	deltaTime = (frameEndTimeMs - lastFrameStartTimeMs)/1000.f;
 	gameTime = frameEndTimeMs / 1000.f;
 	lastFrameStartTimeMs = frameEndTimeMs;
-	std::cout << deltaTime << std::endl;
+	//std::cout << deltaTime << std::endl;
 }
 
 void Game::quit()
@@ -119,8 +118,6 @@ void Game::quit()
 
 void Game::cleanup()
 {
-	ship.cleanup();
-
 	SDL_DestroyWindow(g_pWindow);
 	SDL_DestroyRenderer(g_pRenderer);
 	std::cout << "Goodbye World" << std::endl;
