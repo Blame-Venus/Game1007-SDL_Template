@@ -6,9 +6,9 @@ Sprite::Sprite()
 
 Sprite::Sprite(SDL_Renderer* renderer, const char* filename, int sizeX, int sizeY)
 {
-	g_pSpriteTex = IMG_LoadTexture(renderer, filename);
+	pSpriteTex = IMG_LoadTexture(renderer, filename);
 
-	SDL_QueryTexture(g_pSpriteTex, NULL, NULL, &src.w, &src.h);
+	SDL_QueryTexture(pSpriteTex, NULL, NULL, &src.w, &src.h);
 
 	src.x = 0;
 	src.y = 0;
@@ -25,7 +25,7 @@ Sprite::~Sprite()
 
 void Sprite::cleanup()
 {
-	SDL_DestroyTexture(g_pSpriteTex);
+	SDL_DestroyTexture(pSpriteTex);
 }
 
 void Sprite::setPosition(int x, int y)
@@ -42,5 +42,5 @@ void Sprite::setSize(int x, int y)
 
 void Sprite::draw(SDL_Renderer* renderer)
 {
-	SDL_RenderCopy(renderer, g_pSpriteTex, &src, &dst);
+	SDL_RenderCopy(renderer, pSpriteTex, &src, &dst);
 }

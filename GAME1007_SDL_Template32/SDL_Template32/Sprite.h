@@ -5,7 +5,7 @@
 
 class Sprite
 {
-	SDL_Texture* g_pSpriteTex = nullptr;
+	SDL_Texture* pSpriteTex = nullptr;
 	SDL_Rect src;
 
 public:

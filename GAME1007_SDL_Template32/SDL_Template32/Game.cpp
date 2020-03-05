@@ -13,14 +13,14 @@ Game::Game(const char* windowName, int windowSizeX, int windowSizeY)
 	if (SDL_Init(flags) == 0) // if initialized SDL correctly...
 	{
 		// Create the window
-		g_pWindow = SDL_CreateWindow(windowName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowSizeX, windowSizeY, SDL_WINDOW_SHOWN);
+		pWindow = SDL_CreateWindow(windowName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowSizeX, windowSizeY, SDL_WINDOW_SHOWN);
 
-		if (g_pWindow != nullptr)
+		if (pWindow != nullptr)
 		{
 			// Create the renderer
-			g_pRenderer = SDL_CreateRenderer(g_pWindow, -1, SDL_RENDERER_PRESENTVSYNC);
+			pRenderer = SDL_CreateRenderer(pWindow, -1, SDL_RENDERER_PRESENTVSYNC);
 
-			if (g_pRenderer != nullptr)
+			if (pRenderer != nullptr)
 			{
 				IMG_Init(IMG_INIT_PNG);
 			}
@@ -34,8 +34,8 @@ Game::~Game()
 
 void Game::run()
 {
-	ship = Sprite(g_pRenderer, "ship.png", 140, 140);
-	background = Sprite(g_pRenderer, "ship.png", 800, 600);
+	ship = Sprite(pRenderer, "ship.png", 140, 140);
+	background = Sprite(pRenderer, "ship.png", 800, 600);
 	background.setPosition(0,0);
 	ship.setPosition(0, 0);
 
@@ -85,13 +85,13 @@ void Game::update()
 
 void Game::draw()
 {
-	SDL_SetRenderDrawColor(g_pRenderer, 255, 205, 90, 255);
-	SDL_RenderClear(g_pRenderer);
+	SDL_SetRenderDrawColor(pRenderer, 255, 205, 90, 255);
+	SDL_RenderClear(pRenderer);
 	
-	background.draw(g_pRenderer);
-	ship.draw(g_pRenderer);
+	background.draw(pRenderer);
+	ship.draw(pRenderer);
 	
-	SDL_RenderPresent(g_pRenderer);
+	SDL_RenderPresent(pRenderer);
 }
 
 void Game::waitForNextFrame()
@@ -118,7 +118,7 @@ void Game::quit()
 
 void Game::cleanup()
 {
-	SDL_DestroyWindow(g_pWindow);
-	SDL_DestroyRenderer(g_pRenderer);
+	SDL_DestroyWindow(pWindow);
+	SDL_DestroyRenderer(pRenderer);
 	std::cout << "Goodbye World" << std::endl;
 }

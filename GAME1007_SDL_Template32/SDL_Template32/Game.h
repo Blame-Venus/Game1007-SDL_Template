@@ -20,8 +20,8 @@ class Game
 	float gameTime = 0;
 
 	// A pointer points to an object and is denoted by a "*" in declaration. So g_pWindow is a Pointer which *points* to an object of type SDL_Window
-	SDL_Window* g_pWindow = nullptr;
-	SDL_Renderer* g_pRenderer = nullptr;
+	SDL_Window* pWindow = nullptr;
+	SDL_Renderer* pRenderer = nullptr;
 
 	// to know when to quit
 	bool isRunning;
