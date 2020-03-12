@@ -1,10 +1,7 @@
+// Game class with a game loop (input, update, draw)
 #pragma once
 #include <SDL.h>
 #include "Sprite.h"
-
-
-// Game class with a game loop (input, update, draw)
-
 
 class Game
 {
@@ -56,3 +53,29 @@ public:
 	void cleanup();
 };
 
+
+
+
+
+/*
+if (sdlEvent->type == SDL_KEYDOWN)
+	{
+		switch (sdlEvent->key.keysym.sym)
+		{
+		case SDLK_SPACE:
+			myApp->audioMgr->stopAll();
+			myApp->initializeGame();
+			break;
+
+		case SDLK_UP:
+			myApp->transformCulling++;
+			printf("Transform culling: %i", myApp->transformCulling);
+			break;
+
+		case SDLK_DOWN:
+			myApp->transformCulling--;
+			printf("Transform culling: %i", myApp->transformCulling);
+			break;
+		}
+	}
+*/
