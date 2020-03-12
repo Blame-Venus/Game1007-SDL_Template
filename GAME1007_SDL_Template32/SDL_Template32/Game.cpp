@@ -34,10 +34,20 @@ Game::~Game()
 
 void Game::run()
 {
-	ship = Sprite(pRenderer, "ship.png", 140, 140);
-	background = Sprite(pRenderer, "ship.png", 800, 600);
-	background.setPosition(0,0);
-	ship.setPosition(0, 0);
+	// load assets (sourced from https://opengameart.org/), credit goes to Kenny.nl
+	shipBullet = new Bullet(pRenderer, "Assets/SpaceShooterRedux/PNG/Power-ups/pill_red.png", 10, 10, 500);
+	asteroid = new Sprite(pRenderer, "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big1.png", 100, 100);
+	ship = new Sprite(pRenderer, "Assets/SpaceShooterRedux/PNG/playerShip1_blue.png", 64, 64);
+	background = new Sprite(pRenderer, "Assets/SpaceShooterRedux/Backgrounds/purple.png", 800, 600);
+
+	//spriteManager.sprites.push_back(background);
+	spriteManager.sprites.push_back(shipBullet);
+	spriteManager.sprites.push_back(asteroid);
+	spriteManager.sprites.push_back(ship);
+
+	background->setPosition(0,0);
+	ship->setPosition(400, 400);
+	asteroid->setPosition(500, 200);
 
 
 
@@ -60,25 +70,66 @@ void Game::run()
 
 void Game::input()
 {
+	SDL_Event sdlEvent;
+
+	float movementSpeed = 200;
+
+	while (SDL_PollEvent(&sdlEvent))
+	{
+		std::cout << "spam" << std::endl;
+		if (sdlEvent.type == SDL_KEYDOWN)
+		{
+			switch (sdlEvent.key.keysym.sym)
+			{
+			case(SDLK_SPACE):
+			{
+				shipBullet->dst.x = ship->dst.x;
+				shipBullet->dst.y = ship->dst.y;
+				break;
+			}
+			case(SDLK_LEFT):
+			{
+				break;
+			}
+			case(SDLK_RIGHT):
+			{
+				ship->dst.y += movementSpeed * deltaTime;
+				break;
+			}
+			case(SDLK_UP):
+			{
+				ship->dst.x += movementSpeed * deltaTime;
+				break;
+			}
+			case(SDLK_DOWN):
+			{
+				ship->dst.y -= movementSpeed * deltaTime;
+				ship->dst.x -= movementSpeed * deltaTime;
+				break;
+			}
+
+			case(SDLK_ESCAPE):
+			{
+				quit();
+				break;
+			}
+			}
+		}
+		
+	}
 }
 
 void Game::update()
 {
-	// transforming ship based on sinosoidal function of time
-	// for fun!
-	ship.velX = sin(gameTime) * 100;
-	ship.velY = sin(gameTime) * 100;
+	spriteManager.updateAll(deltaTime);
 
-	ship.dst.x = ship.dst.x + ship.velX * deltaTime;
-	ship.dst.y = ship.dst.y + ship.velY * deltaTime;
-
-	//ship.setPosition(400, sin((float)SDL_GetTicks() / 1000.f) * 200 + 200);
-	ship.setSize(sin(gameTime * 100) + 100, sin(gameTime) * 100 + 100);
-
-	// automatically quit after 30 seconds just as an example to show Qame.quit()
-	if (gameTime > 30)
+	if (ship->isCollidingWith(*asteroid))
 	{
-		std::cout << "automatically quitting -- 30 seconds have passed" << std::endl;
+		std::cout << "more spam" << std::endl;
+	}
+
+	if (gameTime > 120)
+	{
 		quit();
 	}
 }
@@ -86,10 +137,9 @@ void Game::update()
 void Game::draw()
 {
 	SDL_SetRenderDrawColor(pRenderer, 255, 205, 90, 255);
-	SDL_RenderClear(pRenderer);
+	//SDL_RenderClear(pRenderer);
 	
-	background.draw(pRenderer);
-	ship.draw(pRenderer);
+	spriteManager.drawAll();
 	
 	SDL_RenderPresent(pRenderer);
 }
@@ -108,7 +158,7 @@ void Game::waitForNextFrame()
 	deltaTime = (frameEndTimeMs - lastFrameStartTimeMs)/1000.f;
 	gameTime = frameEndTimeMs / 1000.f;
 	lastFrameStartTimeMs = frameEndTimeMs;
-	//std::cout << deltaTime << std::endl;
+	std::cout << "spammity" << deltaTime << std::endl;
 }
 
 void Game::quit()
@@ -118,8 +168,7 @@ void Game::quit()
 
 void Game::cleanup()
 {
-	ship.cleanup();
-	background.cleanup();
+	spriteManager.cleanup();
 	SDL_DestroyWindow(pWindow);
 	SDL_DestroyRenderer(pRenderer);
 	std::cout << "Goodbye World" << std::endl;
