@@ -118,6 +118,8 @@ void Game::quit()
 
 void Game::cleanup()
 {
+	ship.cleanup();
+	background.cleanup();
 	SDL_DestroyWindow(pWindow);
 	SDL_DestroyRenderer(pRenderer);
 	std::cout << "Goodbye World" << std::endl;
