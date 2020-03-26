@@ -4,14 +4,18 @@
 
 class SpriteManager
 {
+private:
+	std::vector<Sprite*> sprites;
+
 public:
 	SpriteManager();
 	~SpriteManager();
 
-	std::vector<Sprite*> sprites;
 
 	void cleanup();
 	void updateAll(float deltaTime);
 	void drawAll();
+
+	void add(Sprite* spriteToAdd);
 };
 

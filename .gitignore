@@ -19,3 +19,12 @@
 *.exe
 *.out
 *.app
+
+# Other Visual Studio stuff
+.vs/
+*.VC.db
+*.tlog
+*.pdb
+*.lastbuildstate
+*.idb
+*.log

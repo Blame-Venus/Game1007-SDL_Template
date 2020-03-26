@@ -4,6 +4,7 @@
 #include "Sprite.h"
 #include "Bullet.h"
 #include "SpriteManager.h"
+#include "Ship.h"
 
 class Game
 {
@@ -25,11 +26,13 @@ class Game
 	// to know when to quit
 	bool isRunning;
 
+	//bool buttonsPressed[16] = {false};
+
 public:
-	Sprite* ship;
+	Ship* ship;
 	Sprite* asteroid;
 	Sprite* background;
-	Bullet* shipBullet;
+	Bullet* bullet;
 	SpriteManager spriteManager;
 
 	Game();

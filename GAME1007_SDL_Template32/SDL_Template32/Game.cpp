@@ -35,21 +35,24 @@ Game::~Game()
 void Game::run()
 {
 	// load assets (sourced from https://opengameart.org/), credit goes to Kenny.nl
-	shipBullet = new Bullet(pRenderer, "Assets/SpaceShooterRedux/PNG/Power-ups/pill_red.png", 10, 10, 500);
 	asteroid = new Sprite(pRenderer, "Assets/SpaceShooterRedux/PNG/Meteors/meteorBrown_big1.png", 100, 100);
-	ship = new Sprite(pRenderer, "Assets/SpaceShooterRedux/PNG/playerShip1_blue.png", 64, 64);
+	asteroid->tag = SpriteTag::OBSTACLE;
+
+	ship = new Ship(pRenderer, "Assets/SpaceShooterRedux/PNG/playerShip1_blue.png", 64, 64);
+	ship->tag = SpriteTag::PLAYER;
+
 	background = new Sprite(pRenderer, "Assets/SpaceShooterRedux/Backgrounds/purple.png", 800, 600);
 
-	//spriteManager.sprites.push_back(background);
-	spriteManager.sprites.push_back(shipBullet);
-	spriteManager.sprites.push_back(asteroid);
-	spriteManager.sprites.push_back(ship);
+	spriteManager.add(background);
+	spriteManager.add(new Sprite(pRenderer, "Assets/explosion_01.png", 64, 64, 6));
+	spriteManager.add(asteroid);
+	spriteManager.add(ship);
 
 	background->setPosition(0,0);
 	ship->setPosition(400, 400);
 	asteroid->setPosition(500, 200);
 
-
+	bullet = new Bullet(pRenderer, "Assets/SpaceShooterRedux/PNG/Power-ups/pill_red.png", 10, 10, 500);
 
 	isRunning = true;
 	
@@ -74,37 +77,38 @@ void Game::input()
 
 	float movementSpeed = 200;
 
+	static bool spacePressed = false;
+
+
 	while (SDL_PollEvent(&sdlEvent))
 	{
-		std::cout << "spam" << std::endl;
 		if (sdlEvent.type == SDL_KEYDOWN)
 		{
 			switch (sdlEvent.key.keysym.sym)
 			{
 			case(SDLK_SPACE):
 			{
-				shipBullet->dst.x = ship->dst.x;
-				shipBullet->dst.y = ship->dst.y;
+				spacePressed = true;
 				break;
 			}
 			case(SDLK_LEFT):
 			{
+				ship->dst.x -= movementSpeed * deltaTime;
 				break;
 			}
 			case(SDLK_RIGHT):
 			{
-				ship->dst.y += movementSpeed * deltaTime;
+				ship->dst.x += movementSpeed * deltaTime;
 				break;
 			}
 			case(SDLK_UP):
 			{
-				ship->dst.x += movementSpeed * deltaTime;
+				ship->dst.y -= movementSpeed * deltaTime;
 				break;
 			}
 			case(SDLK_DOWN):
 			{
-				ship->dst.y -= movementSpeed * deltaTime;
-				ship->dst.x -= movementSpeed * deltaTime;
+				ship->dst.y += movementSpeed * deltaTime;
 				break;
 			}
 
@@ -115,8 +119,25 @@ void Game::input()
 			}
 			}
 		}
+
+		if (sdlEvent.type == SDL_KEYUP)
+		{
+			switch (sdlEvent.key.keysym.sym)
+			{
+			case(SDLK_SPACE):
+			{
+				spacePressed = false;
+				break;
+			}
+			}
+		}
 		
 	}
+
+		if (spacePressed)
+		{
+			ship->tryShoot();
+		}
 }
 
 void Game::update()
@@ -125,19 +146,14 @@ void Game::update()
 
 	if (ship->isCollidingWith(*asteroid))
 	{
-		std::cout << "more spam" << std::endl;
-	}
-
-	if (gameTime > 120)
-	{
-		quit();
+		std::cout << "colliding" << std::endl;
 	}
 }
 
 void Game::draw()
 {
 	SDL_SetRenderDrawColor(pRenderer, 255, 205, 90, 255);
-	//SDL_RenderClear(pRenderer);
+	SDL_RenderClear(pRenderer);
 	
 	spriteManager.drawAll();
 	
@@ -158,7 +174,6 @@ void Game::waitForNextFrame()
 	deltaTime = (frameEndTimeMs - lastFrameStartTimeMs)/1000.f;
 	gameTime = frameEndTimeMs / 1000.f;
 	lastFrameStartTimeMs = frameEndTimeMs;
-	std::cout << "spammity" << deltaTime << std::endl;
 }
 
 void Game::quit()
@@ -168,6 +183,7 @@ void Game::quit()
 
 void Game::cleanup()
 {
+	bullet->cleanup();
 	spriteManager.cleanup();
 	SDL_DestroyWindow(pWindow);
 	SDL_DestroyRenderer(pRenderer);
